@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+	<TextView android:id="@+id/currencyDateText"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/currencyDateText"
+	    />
+	<TextView  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content"
+	    android:text=" "
+	    />
+	<TextView  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/inputRateValueLabel"
+	    />
+	<EditText android:id="@+id/pushValueEditText"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"/>
+	
+	<TextView  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/chooseRateFrom"
+	    />
+	<Spinner 
+        android:id="@+id/rate_from_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/rate_from_prompt"
+    />
+	    
+	<TextView  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/chooseRateTo"
+	    />
+	<Spinner 
+        android:id="@+id/rate_to_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/rate_to_prompt"
+    />
+	
+	<Button android:id="@+id/calculateButton"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="30dip"
+		android:layout_marginRight="30dip"
+		android:text="@string/calculateButton"/>
+		
+	<TextView android:id="@+id/result"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:textSize="45sp"
+		android:gravity="center"
+		android:text="Wynik"/>		
+</LinearLayout>
