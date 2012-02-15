@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="nbpSite">http://nbp.pl/kursy/kursya.html</string>
+
+	<string name="currencyDateText">Kurs z dnia: </string>
+	<string name="inputRateValueLabel">Wpisz kwotę do przeliczenia:</string>
+	<string name="chooseRateFrom">Wybierz walute zrodlowa:</string>
+	<string name="rate_from_prompt">Wybierz</string>
+	<string name="rate_to_prompt">Wybierz</string>
+	<string name="chooseRateTo">Wybierz walutę docelową:</string>
+	<string name="calculateButton">PRZELICZ</string>
+	<string name="download_in_progress">Trwa pobieranie danych ze strony NBP. Czekaj...</string>
+	<string name="ratesDowloadedOKMsg">Pobieranie danych ukończone. Kliknij przycisk OK, aby przeliczyć kursy walut.</string>
+	<string name="ratesDowloadedFailedMsg">Nie udało się pobrać danych. Aby spróbować ponownie pobrać dane naciśnij \'Pobierz\'.</string>
+	
+	<string name="noCurrenciesAvailableOnDevice">Brak aktualnych kursów walut w aplikacji. Naciśnij przycisk, aby pobrać aktualne kursy.</string>
+	<string name="getCurrencies">POBIERZ KURSY</string>
+	<string name="download">Pobierz</string>
+	<string name="cancel">Anuluj</string>
+
+    <string name="hello">Hello World, NBPExchangeRates!</string>
+    <string name="app_name">Kursy Walut NBP</string>
+    
+    <string-array name="currency_codes_array">
+        <item>CHF</item>
+        <item>EUR</item>
+        <item>PLN</item>
+        <item>RUB</item>
+        <item>USD</item>
+    </string-array>
+    
+    <!-- CURRENCY RATE NAMES -->
+    <string name="CHF">frank szwajcarski</string>
+    <string name="EUR">euro</string>
+    <string name="PLN">złoty polski</string>
+    <string name="RUB">rubel rosyjski</string>
+    <string name="USD">dolar amerykański</string>
+    
+    <string name="plnName">zloty polski</string>
+
+    <string name="sqlDbName">NBP_EXCHANGE_RATES</string>
+    <string name="sqlCreateTable">CREATE TABLE IF NOT EXISTS CURR_RATES (RATE_CODE TEXT PRIMARY KEY, RATE_NAME VARCHAR, RATE_VALUE REAL, RATE_DATE INTEGER)</string>
+    <string name="sqlColumnRatesCode">RATE_CODE</string>
+    <string name="sqlColumnRatesName">RATE_NAME</string>
+    <string name="sqlColumnRatesValue">RATE_VALUE</string>
+    <string name="sqlColumnRatesDate">RATE_DATE</string>
+	
+	<string name="sqlSelectRateRows">SELECT RATE_CODE, RATE_NAME, RATE_VALUE, RATE_DATE FROM CURR_RATES</string>
+	<string name="sqlSelectRateValueByCode">SELECT RATE_VALUE FROM CURR_RATES WHERE RATE_CODE=?</string>  
+	<string name="sqlCountRateRows">SELECT COUNT(*) AS CNT FROM CURR_RATES</string>  
+	<string name="sqlGetRatesDate">SELECT RATE_DATE FROM CURR_RATES</string>
+    
+</resources>
