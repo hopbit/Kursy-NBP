@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * 
+ * @author Łukasz Siwiński
+ *
+ */
 public class ValidatorUtil {
 	
 	private List<String> errors;

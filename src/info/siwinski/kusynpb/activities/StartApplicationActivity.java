@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 /**
  * CONFIGURATION @ strings.xml
- * @author lsiwinski
+ * @author Łukasz Siwiński
  */
 public class StartApplicationActivity extends Activity {
 	
@@ -225,7 +225,7 @@ public class StartApplicationActivity extends Activity {
 		
 			return new Double(inputValue*rateValue);
 		
-		} else if (!RATE_PLN.equals(codeFrom) && !RATE_PLN.equals(codeTo)) { // WZ�R 3
+		} else if (!RATE_PLN.equals(codeFrom) && !RATE_PLN.equals(codeTo)) { // WZÓR 3
 		
 			rateValue = getRateValueByRateCode(codeFrom); // Krok 1 - pobieram aktualny kurs dla codeFrom
 			Double ilePln = (inputValue*rateValue); // Krok 2 - obliczam ile PLN dostane za inputValue waluty codeFrom

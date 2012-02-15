@@ -21,6 +21,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 
+/**
+ * 
+ * @author Łukasz Siwiński
+ *
+ */
 public class DownloadRatesActivity extends Activity {
 
 	public final static String SQL_CHECK_IF_RATE_EXIST = "SELECT COUNT(*) AS CNT FROM CURR_RATES WHERE RATE_CODE=?";

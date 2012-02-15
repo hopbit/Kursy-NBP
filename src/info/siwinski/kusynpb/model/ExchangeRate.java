@@ -2,6 +2,11 @@ package info.siwinski.kusynpb.model;
 
 import java.sql.Date;
 
+/**
+ * 
+ * @author Łukasz Siwiński
+ *
+ */
 public class ExchangeRate {
 
 	private String rateCode;
@@ -22,7 +27,6 @@ public class ExchangeRate {
 		this.rateName = rateName;
 	}
 
-	
 	public Double getRateValue() {
 		return rateValue;
 	}
