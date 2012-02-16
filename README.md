@@ -13,7 +13,7 @@
 If you found errors or have any suggestions on this app, feel free to contact  
 me via this [form](http://siwinski.info/contact.php) 
 
-## Licencse
+## License
 
 Creative Commons: BY-NC-SA 3.0  
 For more informations look here:  
