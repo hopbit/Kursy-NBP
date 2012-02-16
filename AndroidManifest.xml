@@ -16,19 +16,16 @@
             android:name=".StartApplicationActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter >
                 <action android:name="info.siwinski.kusynpb.activities.CALCULATE_FORM" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".DownloadRatesActivity" >
             <intent-filter >
                 <action android:name="info.siwinski.kursynbp.activities.DOWNLOAD" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
