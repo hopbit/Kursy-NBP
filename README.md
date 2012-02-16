@@ -19,3 +19,4 @@ Creative Commons: BY-NC-SA 3.0
 For more informations look here: 
 	EN: http://creativecommons.org/licenses/by-nc-sa/3.0/ 
 	PL: http://creativecommons.org/licenses/by-nc-sa/3.0/pl/ 
+testing
