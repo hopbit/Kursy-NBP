@@ -1,7 +1,5 @@
 package info.siwinski.apps.nbpexchagerates;
 
-import info.siwinski.apps.nbpexchagerates.R;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
