@@ -1,4 +1,4 @@
-# Kursy Walut
+# Kursy NBP
 
 ## Installation
 
