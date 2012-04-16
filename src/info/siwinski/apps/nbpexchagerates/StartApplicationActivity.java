@@ -29,14 +29,13 @@ import android.widget.Toast;
 
 /**
  * CONFIGURATION @ strings.xml
- * @author Łukasz Siwiński
+ * @author Lukasz Siwinski
  */
 public class StartApplicationActivity extends Activity {
 	
 	String nbpSiteSourceCode = "";
 	List<ExchangeRate> exchangeRates;
 	private TextView currencyDateText;
-	private TextView inputRateValueLabel;
 	public String valToConvertTxt = "";
 	private EditText givenAmountTxt;
 	private Spinner rateFromSpinner;
@@ -213,14 +212,14 @@ public class StartApplicationActivity extends Activity {
 		
 		
 		if(codeFrom.equals(codeTo)) {
-			return new Double(inputValue);
+			return Double.valueOf(inputValue);
 		} else if (RATE_PLN.equals(codeFrom) && !RATE_PLN.equals(codeTo)) { // WZOR 1
 			
-			return new Double (inputValue/rateValue);
+			return Double.valueOf(inputValue/rateValue);
 
 		} else if (!RATE_PLN.equals(codeFrom) && RATE_PLN.equals(codeTo)) { // WZOR 2
 		
-			return new Double(inputValue*rateValue);
+			return Double.valueOf(inputValue*rateValue);
 		
 		} else if (!RATE_PLN.equals(codeFrom) && !RATE_PLN.equals(codeTo)) { // WZÓR 3
 		

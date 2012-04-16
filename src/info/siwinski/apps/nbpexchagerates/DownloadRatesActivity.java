@@ -185,9 +185,11 @@ public class DownloadRatesActivity extends Activity {
 		List<ExchangeRate> exchangeRates = new ArrayList<ExchangeRate>();
 
 		// POBIERAM DATE DANYCH
-		int datePosition = html.indexOf("</b> z dnia <b>");
-		String dataDateStr = html.substring(datePosition + 15,
-				datePosition + 25);
+		String dateStrMarker = "z dnia";
+		int markerStart = html.indexOf(dateStrMarker);
+		int dateStringStart = markerStart + dateStrMarker.length() + 1;
+		int dateStringEnd = dateStringStart + 10;
+		String dataDateStr = html.substring(dateStringStart,dateStringEnd);
 		Date dataDate = Date.valueOf(dataDateStr);
 
 		String currentRate;
@@ -195,9 +197,17 @@ public class DownloadRatesActivity extends Activity {
 		// pobieram kursy i zapisuje je w liscie
 		for (String s : ratesDict) {
 
-			int ratePosition = html.indexOf(s);
-			currentRate = new String(html.substring(ratePosition + 31,
-					ratePosition + 37));
+			int rateMarkerStart = html.indexOf(s);
+			String dummyString = "</td>"+
+					"\n" +
+					"               "+
+					"<td class=\"bgt2 right\">";
+			int rateStrBegin = rateMarkerStart +
+					s.length() + 
+					dummyString.length() + 1;
+			int rateStrEnd = rateStrBegin + 6;
+			
+			currentRate = new String(html.substring(rateStrBegin,rateStrEnd));
 
 			Double value = null;
 			try {

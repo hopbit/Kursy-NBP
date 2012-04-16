@@ -12,7 +12,7 @@ import java.util.List;
 public class ValidatorUtil {
 	
 	private List<String> errors;
-	private String doublePattern = "\\d+\\.{0,1}\\d+";
+	private String doublePattern = "\\d+(\\.{0,1}\\d+)*";
 	
 	public ValidatorUtil() {
 		errors = new ArrayList<String>();
