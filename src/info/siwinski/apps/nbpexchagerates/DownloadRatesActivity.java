@@ -1,16 +1,35 @@
 package info.siwinski.apps.nbpexchagerates;
 
-import info.siwinski.apps.nbpexchagerates.R;
-
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,6 +47,8 @@ import android.util.Log;
  */
 public class DownloadRatesActivity extends Activity {
 
+	private static final String ENCODING_UTF_8 = "UTF-8";
+	private static final String DOWNLOAD_RATES_ACTIVITY = "DownloadRatesActivity";
 	public final static String SQL_CHECK_IF_RATE_EXIST = "SELECT COUNT(*) AS CNT FROM CURR_RATES WHERE RATE_CODE=?";
 	public final static String SQL_INSERT_RATE_ROW = "INSERT INTO CURR_RATES (RATE_CODE, RATE_NAME, RATE_VALUE, RATE_DATE) VALUES ({0},{1},{2},{3})";
 	public final static String SQL_UPDATE_RATE_ROW = "UPDATE CURR_RATES SET RATE_VALUE={2}, RATE_DATE={3} WHERE RATE_CODE={0} {1}";
@@ -153,7 +174,7 @@ public class DownloadRatesActivity extends Activity {
 					c.close();
 
 				} catch (Exception e) {
-					Log.e(this.getClass().getSimpleName(), e.toString());
+					Log.e(DOWNLOAD_RATES_ACTIVITY, e.toString());
 					return false;
 				}
 			}
@@ -171,125 +192,128 @@ public class DownloadRatesActivity extends Activity {
 
 	private List<ExchangeRate> getExchangeRatesFromWWW() {
 
-		String html = getHtmlContentFromNbpSite();
-		List<ExchangeRate> list = getExchangeRatesFromHtmlString(html);
-		return list;
-
+		String xml = getXmlContentFromNbpSite();
+		Document document = xmlFromString(xml);
+		return documentToExchangeRatesList(document);
 	}
 
-	private List<ExchangeRate> getExchangeRatesFromHtmlString(String html) {
-
-		List<String> ratesDict = new ArrayList<String>(
-				Arrays.asList(getResources().getStringArray(
-						R.array.currency_codes_array)));
-		List<ExchangeRate> exchangeRates = new ArrayList<ExchangeRate>();
-
-		// POBIERAM DATE DANYCH
-		String dateStrMarker = "z dnia";
-		int markerStart = html.indexOf(dateStrMarker);
-		int dateStringStart = markerStart + dateStrMarker.length() + 1;
-		int dateStringEnd = dateStringStart + 10;
-		String dataDateStr = html.substring(dateStringStart,dateStringEnd);
-		Date dataDate = Date.valueOf(dataDateStr);
-
-		String currentRate;
-
-		// pobieram kursy i zapisuje je w liscie
-		for (String s : ratesDict) {
-
-			int rateMarkerStart = html.indexOf(s);
-			String dummyString = "</td>"+
-					"\n" +
-					"               "+
-					"<td class=\"bgt2 right\">";
-			int rateStrBegin = rateMarkerStart +
-					s.length() + 
-					dummyString.length() + 1;
-			int rateStrEnd = rateStrBegin + 6;
-			
-			currentRate = new String(html.substring(rateStrBegin,rateStrEnd));
-
-			Double value = null;
-			try {
-				if (s.equals("PLN")) {
-					value = 1.0;
-				} else {
-					value = Double.parseDouble(currentRate.substring(0, 1)
-							+ "."
-							+ currentRate.substring(2, currentRate.length()));
-				}
-			} catch (NumberFormatException e) {
-				Log.e(this.getClass().getName(),"ERROR on parsing : " + this.getClass().getName(), e);
-			}
-
-			ExchangeRate obj = new ExchangeRate();
-			obj.setRateCode(s);
-
-			String packageName = getPackageName();
-			int resId = getResources().getIdentifier(s, "string", packageName);
-			String rateName = getString(resId);
-			obj.setRateName(rateName);
-
-			obj.setRateValue(value);
-			obj.setRateDate(dataDate);
-
-			exchangeRates.add(obj);
-
-		}
-
-		if (exchangeRates.isEmpty()) {
-			// setContentView(XXX);
-			return null;
-		} else {
-			// setContentView(XXX);
-			return exchangeRates;
-		}
-
-	}
-
-	private String getHtmlContentFromNbpSite() {
-
-		String html = new String();
-
+	private String getXmlContentFromNbpSite() {
+		
+		String url = "http://nbp.pl/kursy/xml/LastA.xml";
+		Log.d(DOWNLOAD_RATES_ACTIVITY, url.toString());
+		String xml = null;
 		try {
-			nbpSite = getResources().getString(R.string.nbpSite);
-			URL url = new URL(nbpSite);
-			InputStream inputStream = url.openStream();
-			StringBuffer buffer = new StringBuffer();
+			
+			HttpClient client = new DefaultHttpClient();
+			HttpGet get = new HttpGet(url);
 			try {
-				int ch;
-				while ((ch = inputStream.read()) != -1) {
-					buffer.append((char) ch);
-				}
+				HttpResponse resp = client.execute(get);
+				xml = EntityUtils.toString(resp.getEntity()); 
+		        Log.d(DOWNLOAD_RATES_ACTIVITY, "UserData "+xml);
 			} catch (Exception e) {
-				e.printStackTrace();
-				Log.e(this.getClass().getSimpleName().toString(), e.toString()); // TODO:
-																					// handle
-																					// exception
-			} finally {
-				if (inputStream != null) {
+				Log.e(DOWNLOAD_RATES_ACTIVITY, "error on http get execute", e);
+			}
+		} catch (Exception e) {
+			Log.e(DOWNLOAD_RATES_ACTIVITY, "error occured", e);
+		}
+		
+		return xml;
+	}
+
+	private Document xmlFromString(String xml) {
+
+		DocumentBuilderFactory factory;
+		DocumentBuilder builder;
+		InputStream is;
+		Document dom = null;
+	    try {
+	        factory = DocumentBuilderFactory.newInstance();
+	        is = new ByteArrayInputStream(xml.getBytes(ENCODING_UTF_8));
+	        builder = factory.newDocumentBuilder();
+	        dom = builder.parse(is);
+	        Log.d(DOWNLOAD_RATES_ACTIVITY, dom.toString());
+        }
+	    catch(Exception e){
+	    	Log.e(DOWNLOAD_RATES_ACTIVITY, "Error on parsing XML String",e);
+	    }
+		return dom;
+	}
+
+	private List<ExchangeRate> documentToExchangeRatesList(Document doc) {
+
+		List<ExchangeRate> exchangeRates = new ArrayList<ExchangeRate>();
+		ExchangeRate rate = null;
+
+		// date
+		NodeList dataPublikacjiNodes = doc.getElementsByTagName("data_publikacji");
+		Element dataPublikacjiNode = (Element) dataPublikacjiNodes.item(0);
+		String dateString = getNodeValue(dataPublikacjiNode);
+		
+		// rates
+		NodeList pozycjaNodes = doc.getElementsByTagName("pozycja"); 
+		for (int i = 0; i < pozycjaNodes.getLength(); i++) {
+			
+			Element pozycjaNode = (Element) pozycjaNodes.item(i);
+			Log.d(DOWNLOAD_RATES_ACTIVITY, "> " + pozycjaNode.getLocalName());
+			rate = getRate(pozycjaNode);
+			rate.setRateDate(Date.valueOf(dateString));
+			
+			exchangeRates.add(rate);Log.d(DOWNLOAD_RATES_ACTIVITY, ">>>>> rate: \n"+rate);
+		}
+		
+		rate = getPLNRate(dateString);
+		exchangeRates.add(rate);
+
+		return exchangeRates ;
+	}
+
+	private ExchangeRate getPLNRate(String dateString) {
+		ExchangeRate rate;
+		rate = new ExchangeRate();
+		rate.setRateCode("PLN");
+		rate.setRateDate(Date.valueOf(dateString));
+		rate.setRateName("złoty polski");
+		rate.setRateValue(Double.valueOf(1.0));
+		return rate;
+	}
+
+	private String getNodeValue(Element dataPublikacjiVal) {
+		return dataPublikacjiVal.getChildNodes().item(0).getNodeValue();
+	}
+
+	private ExchangeRate getRate(Element pozycjaNode) {
+		ExchangeRate rate = new ExchangeRate();
+		NodeList pozycjaChildNodes = pozycjaNode.getChildNodes();
+		for (int i = 0; i < pozycjaChildNodes.getLength(); i++) {
+			Node pozycjaChildNode = pozycjaChildNodes.item(i);
+			Log.d(DOWNLOAD_RATES_ACTIVITY, ">> pozycjaChildNode.nodeType: "+ pozycjaChildNode.getNodeType());
+			if(Node.ELEMENT_NODE == pozycjaChildNode.getNodeType()) {
+				
+				Element pozycjaChildElement = (Element) pozycjaChildNode;
+				String nodeName = pozycjaChildElement.getNodeName();
+				Log.d(DOWNLOAD_RATES_ACTIVITY, ">>> pozycjaChildElement.nodeName: " + pozycjaChildElement.getNodeName());
+				String nodeValue = getNodeValue(pozycjaChildElement); Log.d(DOWNLOAD_RATES_ACTIVITY, ">>>> pozycjaChildElement.nodeValue: "+ pozycjaChildElement.getNodeValue());
+				
+				if("nazwa_waluty".equals(nodeName)){
+					rate.setRateName(nodeValue);
+				} else if ("kod_waluty".equals(nodeName)) {
+					rate.setRateCode(nodeValue);
+				} else if ("kurs_sredni".equals(nodeName)) {
+					NumberFormat formatter = NumberFormat.getInstance(Locale.getDefault());
+					Number number = null;
 					try {
-						inputStream.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
+						number = formatter.parse(nodeValue);
+					} catch (ParseException e) {
 						e.printStackTrace();
 					}
+			    	Double doubleRateValue = Double.valueOf(number.doubleValue());
+					rate.setRateValue(doubleRateValue);
 				}
 			}
-
-			html = buffer.toString();
-
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			// do nothing?
+			
 		}
-
-		return html;
+		return rate;
 	}
+
 
 }

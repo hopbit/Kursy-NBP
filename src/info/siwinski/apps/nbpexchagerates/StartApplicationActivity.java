@@ -6,8 +6,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -144,9 +148,10 @@ public class StartApplicationActivity extends Activity {
 						
 						result = calculateRateMagicBox(inputRateValue, inputRateFromCode,inputRateToCode);
 						
-						String pattern = "###.##";
-						DecimalFormat myFormatter = new DecimalFormat(pattern);
-						String output = myFormatter.format(result) + " " + inputRateToCode;
+						NumberFormat myFormatter = NumberFormat.getInstance(Locale.getDefault());
+						myFormatter.setMinimumFractionDigits(2);
+						myFormatter.setMaximumFractionDigits(2);
+						String output = myFormatter.format(result) + " " + inputRateToCode.substring(0, 3);
 						
 						resultView.setText(output);
 					
@@ -201,8 +206,11 @@ public class StartApplicationActivity extends Activity {
     
 
 	private Double calculateRateMagicBox(Double inputValue,
-			String codeFrom, String codeTo) {
+			String codeFromOrg, String codeToOrg) {
 
+		String codeFrom = codeFromOrg.substring(0,3);
+		String codeTo = codeToOrg.substring(0,3);
+		
 		Double rateValue;
 		if(!RATE_PLN.equals(codeFrom)) {
 			rateValue = getRateValueByRateCode(codeFrom);
@@ -376,10 +384,13 @@ public class StartApplicationActivity extends Activity {
 	}
 
 	private String[] getRateCodeArray(List<ExchangeRate> exchangeRates) {
-		String[] array = new  String[exchangeRates.size()];
+		Collections.sort(exchangeRates);
+		String[] array = new String[exchangeRates.size()];
 		int i= 0;
 		for(ExchangeRate r : exchangeRates) {
-			array[i++]=r.getRateCode();
+			NumberFormat formatter = NumberFormat.getInstance(Locale.getDefault());
+			String rateValueStr = formatter.format(r.getRateValue());
+			array[i++]=r.getRateCode() + " " + r.getRateName() + " " + rateValueStr;
 		}
 		return array;
 	}

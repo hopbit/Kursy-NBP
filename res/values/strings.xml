@@ -49,6 +49,6 @@
 	<string name="sqlSelectRateRows">SELECT RATE_CODE, RATE_NAME, RATE_VALUE, RATE_DATE FROM CURR_RATES</string>
 	<string name="sqlSelectRateValueByCode">SELECT RATE_VALUE FROM CURR_RATES WHERE RATE_CODE=?</string>  
 	<string name="sqlCountRateRows">SELECT COUNT(*) AS CNT FROM CURR_RATES</string>  
-	<string name="sqlGetRatesDate">SELECT RATE_DATE FROM CURR_RATES</string>
+	<string name="sqlGetRatesDate">SELECT RATE_DATE FROM CURR_RATES</string>  
     
 </resources>

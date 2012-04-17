@@ -4,10 +4,11 @@ import java.sql.Date;
 
 /**
  * 
- * @author Łukasz Siwiński
+ * @author Lukasz Siwinski
+ * @param <T>
  *
  */
-public class ExchangeRate {
+public final class ExchangeRate implements Comparable<ExchangeRate>{
 
 	private String rateCode;
 	private String rateName;
@@ -38,5 +39,10 @@ public class ExchangeRate {
 	}
 	public void setRateCode(String rateCode) {
 		this.rateCode = rateCode;
+	}
+	public int compareTo(ExchangeRate another) {
+		String thisCode = getRateCode();
+		String anotherCode = another.getRateCode();
+		return thisCode.compareTo(anotherCode);
 	}
 }
