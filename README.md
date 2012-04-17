@@ -1,5 +1,9 @@
 # Kursy NBP
 
+## Version
+
+Latest build: 2012-04-17
+
 ## Installation
 
 * Enable installation of applications from outside the Android Market
